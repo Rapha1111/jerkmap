@@ -27,6 +27,38 @@ xhr.send();
 var BrIcon = L.icon({
     iconUrl: 'map.png',
     iconSize: [70, 70],
+    iconAnchor: [35,65],
+    popupAnchor: [0, -65],
+    
+});
+var KissIcon = L.icon({
+    iconUrl: 'kiss.png',
+    iconSize: [70, 70],
+    iconAnchor: [35,65],
+    popupAnchor: [0, -65],
+    
+});
+var PreliIcon = L.icon({
+    iconUrl: 'preli.png',
+    iconSize: [70, 70],
+    iconAnchor: [35,65],
+    popupAnchor: [0, -65],
+    
+});
+var BzIcon = L.icon({
+    iconUrl: 'bz.png',
+    iconSize: [70, 70],
+    iconAnchor: [35,65],
+    popupAnchor: [0, -65],
+    
+});
+
+acticon=[NaN, BrIcon, KissIcon, PreliIcon, BzIcon]
+actemoji=[NaN, "🍌","💋", "💦","🍑"]
+
+var PersoIcon=L.icon({
+    iconUrl: 'stats.png',
+    iconSize: [70, 70],
     iconAnchor: [35,35],
     popupAnchor: [0, -35],
     
@@ -42,9 +74,11 @@ function connected(jerks){
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+    var marker = L.marker(coords, {icon: PersoIcon}).addTo(map);
+        marker.bindPopup("Vous")
     jerks.forEach(function(a) {
-        var marker = L.marker([a[2], a[3]], {icon: BrIcon}).addTo(map);
-        marker.bindPopup("<b>"+a[1]+"</b><br>"+a[5])
+        var marker = L.marker([a[2], a[3]], {icon: acticon[a[4]]}).addTo(map);
+        marker.bindPopup("<b>"+actemoji[a[4]]+" "+a[1]+"</b><br>"+a[5])
 });
     })
 }

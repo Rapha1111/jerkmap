@@ -1,0 +1,52 @@
+.app{
+    position: fixed;
+    top:0px;
+    left:0px;
+    border:0px;
+    height: 100%;
+    width: 100%;
+    align-content: center;
+    text-align: center;
+    margin: 0%;
+}
+.logo{
+    height: 30vh;
+    width: 30vh;
+}
+input{
+    height: 30px;
+    width:80%;
+    border:2px;
+    border-color: yellow;
+    background-color: #4cc5f8;
+}
+
+.tabbar{
+    position:fixed;
+    bottom:0px;
+    left:0px;
+    height: 80px;
+    width:100%;
+    background: linear-gradient(
+    to top,
+    rgb(255, 255, 255) 80%,
+    transparent 100%
+  );
+    display: none;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+}
+
+.icon{
+    height: 70px;
+    width:70px;
+    flex: 0; 
+}
+
+#map{
+    height: 100%;
+    width: 100%;
+    border: 0px;
+    margin:0px;
+}

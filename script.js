@@ -104,6 +104,28 @@ function getPos() {
 
 // Exemple d’utilisation :
 
+function inscrire(){
+    if (document.getElementById("ipassword").value!=document.getElementById("ipassword2").value){
+        alert("les deux mot de passe sont différents")
+        return;
+    }
+    var xhr = new XMLHttpRequest();
+xhr.open('GET', api+'/inscription?name='+document.getElementById("ipseudo").value+'&password='+document.getElementById("ipassword").value, true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText=="non"){
+			alert("ce pseudo est déjà pris")
+    } else {
+		localStorage.setItem("name", document.getElementById("ipseudo").value)
+		localStorage.setItem("pswd", document.getElementById("ipassword").value)
+        document.getElementById("cpseudo").value=document.getElementById("ipseudo").value
+        document.getElementById("cpassword").value=document.getElementById("ipassword").value
+		connect()
+	}
+}
+}
+xhr.send();
+}
 
 
 function goconnect(){

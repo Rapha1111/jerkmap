@@ -102,8 +102,6 @@ function getPos() {
   });
 }
 
-// Exemple d’utilisation :
-
 function inscrire(){
     if (document.getElementById("ipassword").value!=document.getElementById("ipassword2").value){
         alert("les deux mot de passe sont différents")
@@ -137,4 +135,83 @@ function goconnect(){
 function goinscrire(){
     document.getElementById("inscrire").hidden=false
     document.getElementById("connect").hidden=true
+}
+
+function menumap(){
+    document.getElementById("map-screen").hidden=false
+    document.getElementById("friend-screen").hidden=true
+    document.getElementById("add-friend-screen").hidden=true
+    document.getElementById("stat-screen").hidden=true
+}
+function menufriend(){
+    document.getElementById("map-screen").hidden=true
+    document.getElementById("friend-screen").hidden=false
+    document.getElementById("add-friend-screen").hidden=true
+    document.getElementById("stat-screen").hidden=true
+    var xhr = new XMLHttpRequest();
+xhr.open('GET', api+'/get_friend_stats?name='+localStorage.getItem("name")+'&password='+localStorage.getItem("pswd"), true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText=="non"){
+			alert("Une erreur est survenue")
+    } else {
+        amis=JSON.parse(xhr.responseText)
+		amis.sort((a, b) => b[1] - a[1]);
+        t=""
+        amis.forEach(function(a) {
+        t+=a[0]+" : "+a[1]+"🔥<br>"
+        
+});
+        document.getElementById("friends").innerHTML=t
+	}
+}
+}
+xhr.send();
+}
+function add_friend(nom){
+    var xhr = new XMLHttpRequest();
+xhr.open('GET', api+'/follow?name='+localStorage.getItem("name")+'&password='+localStorage.getItem("pswd")+'&who='+nom, true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText=="non"){
+			alert("Une erreur est survenue")
+    } else {
+        alert(nom+" ajouté !")
+	}
+}
+}
+xhr.send();
+}
+
+function cherche_friend(){
+    var xhr = new XMLHttpRequest();
+xhr.open('GET', api+'/cherche_user?name='+localStorage.getItem("name")+'&password='+localStorage.getItem("pswd")+'&q='+document.getElementById("chercher").value, true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText=="non"){
+			alert("Une erreur est survenue")
+    } else {
+        gens=JSON.parse(xhr.responseText)
+        t="<hr>"
+        gens.forEach(function(a) {
+        t+="<input type=button onclick=add_friend(\""+a+"\") value="+a+">"
+        
+});document.getElementById("result").innerHTML=t
+	}
+}
+}
+xhr.send();
+}
+
+function menuaddfriend(){
+    document.getElementById("map-screen").hidden=true
+    document.getElementById("friend-screen").hidden=true
+    document.getElementById("add-friend-screen").hidden=false
+    document.getElementById("stat-screen").hidden=true
+}
+function menustat(){
+    document.getElementById("map-screen").hidden=true
+    document.getElementById("friend-screen").hidden=true
+    document.getElementById("add-friend-screen").hidden=true
+    document.getElementById("stat-screen").hidden=false
 }

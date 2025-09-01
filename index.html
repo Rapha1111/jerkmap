@@ -38,15 +38,27 @@
     <div id="map-screen" class="app" hidden>
         <div id="map"></div>
     </div>
-
+    <div id="friend-screen" class="app" hidden>
+        <input type="button" value="Ajouter un ami" onclick="menuaddfriend()">
+        <p id="friends"></p>
+    </div>
+    <div id="add-friend-screen" class="app" hidden>
+        <input type="text" placeholder="chercher un nom" id="chercher">
+        <input type="button" value="Rechercher" onclick="cherche_friend()">
+        <div id="result"></div>
+    </div>
+    <div id="stat-screen" class="app" hidden>
+        <p>Bientot</p>
+    </div>
+    
 
 
 
 
     <div class="tabbar" id="tabbar">
-        <img src="map.png" class="icon">
-        <img src="friends.png" class="icon">
-        <img src="stats.png" class="icon">
+        <img src="map.png" class="icon" onclick="menumap()">
+        <img src="friends.png" class="icon" onclick="menufriend()">
+        <img src="stats.png" class="icon" onclick="menustat()">
     </div>
     <script src="script.js"></script>
 </body>

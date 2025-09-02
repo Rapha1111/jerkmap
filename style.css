@@ -13,12 +13,20 @@
     height: 30vh;
     width: 30vh;
 }
-input{
+input, select{
     height: 30px;
     width:80%;
     border:2px;
     border-color: yellow;
     background-color: #4cc5f8;
+}
+
+textarea{
+   height: 80px;
+    width:80%;
+    border:2px;
+    border-color: yellow;
+    background-color: #4cc5f8; 
 }
 
 .tabbar{
@@ -49,4 +57,12 @@ input{
     width: 100%;
     border: 0px;
     margin:0px;
+}
+
+.addbtn{
+    position: fixed;
+    bottom: 100px;
+    right: 10px;
+    height: 70px;
+    width:70px;
 }

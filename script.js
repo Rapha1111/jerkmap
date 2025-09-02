@@ -2,18 +2,36 @@ var map = L.map('map')
 
 api="https://projetx.koyeb.app"
 
+function msgalert(text, exit){
+    if(exit){
+        document.getElementById("msg-screen").innerHTML="<p>"+text+"</p><input type=button value=\"ok\" onclick=\""+exit+"()\">"
+    } else {
+        document.getElementById("msg-screen").innerHTML="<p>"+text+"</p>"
+    }
+    document.getElementById("msg-screen").hidden=false
+    document.getElementById("map-screen").hidden=true
+    document.getElementById("add-jerk-screen").hidden=true
+    document.getElementById("friend-screen").hidden=true
+    document.getElementById("add-friend-screen").hidden=true
+    document.getElementById("stat-screen").hidden=true
+    document.getElementById("inscrire").hidden=true
+    document.getElementById("connect").hidden=true
+}
+
+
 if (localStorage.getItem("name")!=undefined){
     document.getElementById("cpseudo").value=localStorage.getItem("name");
     document.getElementById("cpassword").value=localStorage.getItem("pswd");
 }
 
 function connect(){
+    msgalert("connexion...")
     var xhr = new XMLHttpRequest();
 xhr.open('GET', api+'/get_jerk?name='+document.getElementById("cpseudo").value+'&password='+document.getElementById("cpassword").value, true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
         if (xhr.responseText=="non"){
-			alert("nom ou mot de passe incorrect")
+			msgalert("nom ou mot de passe incorrect", 'goconnect')
     } else {
 		localStorage.setItem("name", document.getElementById("cpseudo").value)
 		localStorage.setItem("pswd", document.getElementById("cpassword").value)
@@ -65,17 +83,21 @@ var PersoIcon=L.icon({
 });
 
 function connected(jerks){
-    document.getElementById("connect").hidden=true
     document.getElementById("map-screen").hidden=false
+    
+    document.getElementById("inscrire").hidden=true
+    document.getElementById("connect").hidden=true
+    document.getElementById("msg-screen").hidden=true
     document.getElementById("tabbar").style.display="flex"
     getPos().then((coords) => {
     map.setView(coords, 13);
+    document.getElementById("connect").hidden=true
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
     var marker = L.marker(coords, {icon: PersoIcon}).addTo(map);
-        marker.bindPopup("Vous")
+        marker.bindPopup("Vous<br><b onclick=\"menujerk()\">Ajouter</b>").openPopup();
     jerks.forEach(function(a) {
         var marker = L.marker([a[2], a[3]], {icon: acticon[a[4]]}).addTo(map);
         marker.bindPopup("<b>"+actemoji[a[4]]+" "+a[1]+"</b><br>"+a[5])
@@ -103,8 +125,9 @@ function getPos() {
 }
 
 function inscrire(){
+    msgalert("inscription...")
     if (document.getElementById("ipassword").value!=document.getElementById("ipassword2").value){
-        alert("les deux mot de passe sont différents")
+        msgalert("les deux mot de passe sont différents", "goinscrire")
         return;
     }
     var xhr = new XMLHttpRequest();
@@ -112,9 +135,11 @@ xhr.open('GET', api+'/inscription?name='+document.getElementById("ipseudo").valu
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
         if (xhr.responseText=="non"){
-			alert("ce pseudo est déjà pris")
+			msgalert("ce pseudo est déjà pris", "goinscrire")
     } else {
 		localStorage.setItem("name", document.getElementById("ipseudo").value)
+        
+        document.getElementById("inscrire").hidden=true
 		localStorage.setItem("pswd", document.getElementById("ipassword").value)
         document.getElementById("cpseudo").value=document.getElementById("ipseudo").value
         document.getElementById("cpassword").value=document.getElementById("ipassword").value
@@ -129,31 +154,37 @@ xhr.send();
 function goconnect(){
     document.getElementById("inscrire").hidden=true
     document.getElementById("connect").hidden=false
+    document.getElementById("msg-screen").hidden=true
 }
 
 
 function goinscrire(){
     document.getElementById("inscrire").hidden=false
     document.getElementById("connect").hidden=true
+    document.getElementById("msg-screen").hidden=true
 }
 
 function menumap(){
     document.getElementById("map-screen").hidden=false
+    document.getElementById("add-jerk-screen").hidden=true
     document.getElementById("friend-screen").hidden=true
     document.getElementById("add-friend-screen").hidden=true
     document.getElementById("stat-screen").hidden=true
+    document.getElementById("msg-screen").hidden=true
 }
 function menufriend(){
     document.getElementById("map-screen").hidden=true
+    document.getElementById("add-jerk-screen").hidden=true
     document.getElementById("friend-screen").hidden=false
     document.getElementById("add-friend-screen").hidden=true
     document.getElementById("stat-screen").hidden=true
+    document.getElementById("msg-screen").hidden=true
     var xhr = new XMLHttpRequest();
 xhr.open('GET', api+'/get_friend_stats?name='+localStorage.getItem("name")+'&password='+localStorage.getItem("pswd"), true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
         if (xhr.responseText=="non"){
-			alert("Une erreur est survenue")
+			msgalert("Une erreur est survenue", "menumap")
     } else {
         amis=JSON.parse(xhr.responseText)
 		amis.sort((a, b) => b[1] - a[1]);
@@ -169,14 +200,15 @@ xhr.onreadystatechange = function() {
 xhr.send();
 }
 function add_friend(nom){
+    msgalert("Ajout en cours...")
     var xhr = new XMLHttpRequest();
 xhr.open('GET', api+'/follow?name='+localStorage.getItem("name")+'&password='+localStorage.getItem("pswd")+'&who='+nom, true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
         if (xhr.responseText=="non"){
-			alert("Une erreur est survenue")
+			msgalert("Une erreur est survenue", "menumap")
     } else {
-        alert(nom+" ajouté !")
+        msgalert(nom+" ajouté !", "menuaddfriend")
 	}
 }
 }
@@ -189,7 +221,7 @@ xhr.open('GET', api+'/cherche_user?name='+localStorage.getItem("name")+'&passwor
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
         if (xhr.responseText=="non"){
-			alert("Une erreur est survenue")
+			msgalert("Une erreur est survenue", "menumap")
     } else {
         gens=JSON.parse(xhr.responseText)
         t="<hr>"
@@ -205,13 +237,43 @@ xhr.send();
 
 function menuaddfriend(){
     document.getElementById("map-screen").hidden=true
+    document.getElementById("add-jerk-screen").hidden=true
     document.getElementById("friend-screen").hidden=true
     document.getElementById("add-friend-screen").hidden=false
     document.getElementById("stat-screen").hidden=true
+    document.getElementById("msg-screen").hidden=true
 }
 function menustat(){
     document.getElementById("map-screen").hidden=true
+    document.getElementById("add-jerk-screen").hidden=true
     document.getElementById("friend-screen").hidden=true
     document.getElementById("add-friend-screen").hidden=true
     document.getElementById("stat-screen").hidden=false
+    document.getElementById("msg-screen").hidden=true
+    
 }
+function menujerk(){
+    document.getElementById("map-screen").hidden=true
+    document.getElementById("add-jerk-screen").hidden=false
+    document.getElementById("friend-screen").hidden=true
+    document.getElementById("add-friend-screen").hidden=true
+    document.getElementById("stat-screen").hidden=true
+    document.getElementById("msg-screen").hidden=true
+}
+
+function send_jerk(){
+    msgalert("Ajout du plaisir en cours...")
+    getPos().then((coords) => {
+    var xhr = new XMLHttpRequest();
+xhr.open('GET', api+'/drop_jerk?name='+localStorage.getItem("name")+'&password='+localStorage.getItem("pswd")+'&lat='+coords[0]+'&long='+coords[1]+'&type='+document.getElementById("type").value+'&temps='+document.getElementById("duree").value+'&kiff='+document.getElementById("kiff").value+'&comm='+document.getElementById("comm").value, true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText=="non"){
+			msgalert("Une erreur est survenue", "menumap")
+    } else {
+        msgalert("Plaisir ajouté !", "menumap")
+	}
+}
+}
+xhr.send();
+})}

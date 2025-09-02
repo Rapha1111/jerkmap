@@ -271,7 +271,7 @@ xhr.onreadystatechange = function() {
         if (xhr.responseText=="non"){
 			msgalert("Une erreur est survenue", "menumap")
     } else {
-        msgalert("Plaisir ajouté !", "menumap")
+        connected(JSON.parse(xhr.responseText))
 	}
 }
 }
